@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>
+        Background Worker Application Example 1: Complicated Number Computation
+    </title>
+</head>
+<body>
+<div>
+    The least common multiple and greatest common divisor is:
+    <p id="computation_results">please wait, computing … </p>
+</div>
+<script>
+    // 创建一个工作线程,返回代表此线程本身的线程对象
+	var worker = new Worker('numberworker.js');
+	// postMessage 用来向后端脚本发送消息
+	worker.postMessage({first:3477340830,second:423323300});
+	// onmessage 用来接收从后端脚本中传递过来的消息
+	worker.onmessage = function (event)
+	{
+		 document.getElementById('computation_results').textContent = event.data;
+       // alert(event.data);
+	};
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+<div id="box"></div>
+<input type="button" id="beginBtn" value="开始">
+<input type="button" id="endBtn" value="停止">
+
+<script>
+	function getId(id){
+		return document.getElementById(id);
+	}
+
+	var oBeginBtn = getId("beginBtn");
+	var oEndBtn = getId("endBtn");
+	var oBox = getId("box");
+	var temp = 0;
+
+	var worker = new Worker("task.js");
+
+	// 接收从线程中传出的计算结果
+    /*
+     worker.onmessage = function(event){
+     // 消息文本放置在data属性中，
+     oBox.innerHTML = event.data;
+     }
+     */
+
+	oBeginBtn.onclick = function(){
+		console.time('a');
+
+		// 将数据传给线程
+		worker.postMessage(100000000);
+
+		worker.onmessage = function(event){
+			// 消息文本放置在data属性中，
+			oBox.innerHTML = event.data;
+		}
+
+		console.timeEnd('a');
+
+	}
+</script>
+</body>
+</html>
+
+<!--
+    postMessage(msg): 向创建线程的源窗口发消息
+    onmessage: 获取接收消息的事件
+    importScript(): 导入其它js脚本，参数为脚本文件的url,可以导入多个脚本文件
+    close(): 结束线程
+    navigator对象: 可以在localStorage和sessionStorage
+               XMLHttpRequest可以在线程中使用ajax
+               setTimeout、setinterval(): 定时器可以使用线程
+-->
